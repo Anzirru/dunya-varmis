@@ -9,7 +9,6 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
 const uuid = require('uuid');
-const res = require('express/lib/response');
 
 const members = {
     "a": {
@@ -34,7 +33,7 @@ function randomStep(start, end, step) {
 const port = process.env.NODE_DOCKER_PORT || 3000;
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.redirect('/register');
 });
 
 app.get('/game', (req, res) => {
@@ -66,7 +65,7 @@ app.post('/register', (req, res) => {
         outfit: req.body.outfit
     };
 
-    res.send(`<a href="game/?id=${id}">Giriş adresi</a>`);
+    res.redirect(`/game/?id=${id}`);
 });
 
 app.use(express.static('public'));

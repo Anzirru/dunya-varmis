@@ -1,0 +1,21 @@
+{
+    "bodies": [
+        "/skin/body0.png",
+        "/skin/body1.png",
+        "/skin/body2.png",
+        "/skin/body3.png"
+    ],
+    "hats": [
+        "/skin/hat0.png",
+        "/skin/hat1.png",
+        "/skin/hat2.png",
+        "/skin/hat3.png",
+        "/skin/hat4.png"
+    ],
+    "outfits": [
+        "/skin/outfit0.png",
+        "/skin/outfit1.png",
+        "/skin/outfit2.png",
+        "/skin/outfit3.png"
+    ]
+}

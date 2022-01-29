@@ -1,0 +1,20 @@
+{
+  "name": "dunya-varmis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^10.0.0",
+    "express": "*",
+    "socket.io": "*",
+    "uuid": "^8.3.2"
+  }
+}

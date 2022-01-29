@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dünya Varmış</title>
+</head>
+<body>
+    <div>
+        <a href="/register">Kaydol</a>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        let socket = io();
+
+        window.addEventListener('mousemove', e => {
+            socket.emit('move', { x: e.clientX, y: e.clientY });
+        });
+
+        socket.on('moved', msg => {
+            console.log(msg);
+        });
+    </script>
+</body>
+</html>

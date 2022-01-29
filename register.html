@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaydol</title>
+</head>
+<body>
+    <div>
+        <form action="" method="POST">
+            <div>
+                <label for="username">Kullanıcı Adı: </label>
+                <input type="text" name="username" required />
+            </div>
+
+            <div id="body">
+            </div>
+            <div id="hat">
+            </div>
+            <div id="outfit">
+            </div>
+
+            <div>
+                <button type="submit">Kaydol</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function createForm(name, item, index) {
+            const image = document.createElement('img');
+            image.src = item;
+            image.width = 16;
+            image.height = 16;
+
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = name;
+            radio.value = index;
+            if (index === 0) {
+                radio.checked = true;
+            }
+
+            const label = document.createElement('label');
+            label.for = name;
+
+            document.querySelector('#'+ name).appendChild(label);
+
+            label.appendChild(image);
+            label.appendChild(radio);
+        }
+
+        fetch('/skin.json').then(r => r.json()).then(d => {
+            d.bodies.forEach((e, i) => {
+                createForm('body', e, i);
+            });
+            d.hats.forEach((e, i) => {
+                createForm('hat', e, i);
+            });
+            d.outfits.forEach((e, i) => {
+                createForm('outfit', e, i);
+            });
+        });
+    </script>    
+</body>
+</html>

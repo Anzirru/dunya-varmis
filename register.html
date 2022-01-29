@@ -5,20 +5,156 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaydol</title>
+
+    <style>
+        body {
+            font-family: monospace;
+            background-color: lightgreen;
+            display: grid;
+            place-content: center center;
+            min-height: 90vh;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .character-selector {
+            margin: 20px auto;
+            width: 160px;
+        }
+
+        .character-selector .part {
+            margin: 20px 12px;
+        }
+
+        .character-selector .part label {
+            padding: 0;
+            margin: 4px 0;
+            display: inline-block;
+            width: 72px;
+            height: 72px;
+        }
+
+        .character-selector .part input[type="radio"]:checked + label {
+        }
+
+        .character-selector .part input[type="radio"]:not(:checked) + label {
+            display: none;
+        }
+
+        .character-selector .part input[type="radio"] {
+            display: none;
+        }
+
+        .character-selector {
+            display: flex;
+        }
+
+        .character-selector .parts {
+            position: relative;
+            width: 88px;;
+        }
+
+        .character-selector .part {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .buttons {
+            cursor: pointer;
+        }
+
+        .buttons > div img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .buttons > div {
+            transition: 300ms ease-in-out all;
+        }
+
+        .buttons > div:hover {
+            filter: brightness(1.7);
+        }
+
+        #form {
+            border: 4px solid #000;
+            width: 300px;
+            padding: 20px;
+            background-color: lightseagreen;
+        }
+
+        input[type="text"] {
+            border: 4px solid #000;
+            padding: 5px;
+            font-size: 1.2rem;
+        }
+
+        #parts {
+            
+        }
+
+        button {
+            display: block;
+            border: 4px solid #000;
+            background-color: yellowgreen;
+            cursor: pointer;
+            padding: 6px 10px;
+            font-size: 1.2rem;
+            transition: 300ms ease-in-out all;
+            margin: 0 auto;
+            font-family: monospace;
+        }
+
+        button:hover {
+            background-color: olivedrab;
+        }
+
+    </style>
 </head>
 <body>
-    <div>
+    <div id="form">
         <form action="" method="POST">
             <div>
-                <label for="username">Kullanıcı Adı: </label>
-                <input type="text" name="username" required />
+                <label for="username">Kullanıcı Adı</label>
+                <div>                
+                    <input type="text" name="username" required />
+                </div>
             </div>
 
-            <div id="body">
-            </div>
-            <div id="hat">
-            </div>
-            <div id="outfit">
+            <div class="character-selector">
+                <div class="buttons">
+                    <div id="hat-left">
+                        <img src="/left.png" alt="Önceki" />
+                    </div>
+                    <div id="body-left">
+                        <img src="/left.png" alt="Önceki" />
+                    </div>
+                    <div id="outfit-left">
+                        <img src="/left.png" alt="Önceki" />
+                    </div>
+                </div>
+                <div class="parts">
+                    <div class="part" id="body">
+                    </div>
+                    <div class="part" id="hat">
+                    </div>
+                    <div class="part" id="outfit">
+                    </div>
+                </div>
+                <div class="buttons">
+                    <div id="hat-right">
+                        <img src="/right.png" alt="Önceki" />
+                    </div>
+                    <div id="body-right">
+                        <img src="/right.png" alt="Önceki" />
+                    </div>
+                    <div id="outfit-right">
+                        <img src="/right.png" alt="Önceki" />
+                    </div>
+                </div>
             </div>
 
             <div>
@@ -31,24 +167,49 @@
         function createForm(name, item, index) {
             const image = document.createElement('img');
             image.src = item;
-            image.width = 16;
-            image.height = 16;
+            image.width = 64;
+            image.height = 64;
 
             const radio = document.createElement('input');
             radio.type = 'radio';
             radio.name = name;
+            radio.setAttribute('id', name + index);
             radio.value = index;
             if (index === 0) {
                 radio.checked = true;
             }
 
             const label = document.createElement('label');
-            label.for = name;
+            label.setAttribute('for', name + index);
+
+            document.querySelector('#'+ name).appendChild(radio);
 
             document.querySelector('#'+ name).appendChild(label);
-
             label.appendChild(image);
-            label.appendChild(radio);
+        }
+
+        function leftRightButtons(list, name) {
+            document.querySelector(`#${name}-left`).addEventListener(`click`, () => {
+                const val = Number(document.querySelector(`.part#${name} input:checked`).value);
+                    
+                if (val === 0) {
+                    document.querySelector(`#${name}${list.length - 1}`).click();
+                }
+                else {
+                    document.querySelector(`#${name}${val - 1}`).click();
+                }
+            });
+            
+            document.querySelector(`#${name}-right`).addEventListener(`click`, () => {
+                const val = Number(document.querySelector(`.part#${name} input:checked`).value);
+
+                if (val === list.length - 1) {
+                    document.querySelector(`#${name}0`).click();
+                }
+                else {
+                    document.querySelector(`#${name}${val + 1}`).click();
+                }
+            });
         }
 
         fetch('/skin.json').then(r => r.json()).then(d => {
@@ -61,6 +222,10 @@
             d.outfits.forEach((e, i) => {
                 createForm('outfit', e, i);
             });
+
+            leftRightButtons(d.bodies, 'body');
+            leftRightButtons(d.hats, 'hat');
+            leftRightButtons(d.outfits, 'outfit');
         });
     </script>    
 </body>

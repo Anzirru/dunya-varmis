@@ -14,7 +14,7 @@ const res = require('express/lib/response');
 const members = {
     "a": {
         username: 'x',
-        coordinates: {x:0,y:0},
+        coordinates: {x:-64,y:0},
         body: 2,
         hat: 1,
         outfit: 1
@@ -25,6 +25,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 require("dotenv").config();
+
+function randomStep(start, end, step) {
+    let randomNumber = (Math.random() * (end - start) + start).toFixed(4);
+    return randomNumber - randomNumber % step;
+}
 
 const port = process.env.NODE_DOCKER_PORT || 3000;
 
@@ -55,7 +60,7 @@ app.post('/register', (req, res) => {
 
     members[id] = {
         username: req.body.username,
-        coordinates: { x: 0, y: 0 },
+        coordinates: { x: Math.floor(randomStep(0, 640, 5)), y: Math.floor(randomStep(0, 480, 5)) },
         body: req.body.body,
         hat: req.body.hat,
         outfit: req.body.outfit
@@ -68,18 +73,29 @@ app.use(express.static('public'));
 
 io.on('connection', client => {
     client.on('move', msg => {
-
         if (members[msg.id] === undefined) return;
 
-        members[msg.id].coordinates = msg.coordinates;
+        members[msg.id].coordinates.x += msg.to.x;
+        members[msg.id].coordinates.y += msg.to.y;
 
         io.emit('moved', {
-            members: Object.values(members)
+            members: Object.values(members),
+            character: members[msg.id]
         });
     });
 
-    io.emit('created', {
-        members: Object.values(members)
+    client.on('create', msg => {
+        io.emit('created', {
+            members: Object.values(members),
+            character: members[msg.id]
+        });
+    });
+
+    client.on('new message', msg => {
+        io.emit('message received', {
+            username: members[msg.id].username,
+            message: msg.message
+        });
     });
 
     console.log(client.id);

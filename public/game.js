@@ -87,12 +87,12 @@ function draw() {
 
     messages.slice(0, 10).forEach((e, i) => {
         col = color(255);
-        col.setAlpha(120);
+        col.setAlpha(200);
         fill(col);
 
-        textSize(16);
+        textSize(12);
         textAlign(LEFT);
-        text(`${e.username}: ${e.message}`, width - 300, height - 30 - i * 20, 300, 40);
+        text(`${e.username}: ${e.message}`, width - 360, height - 30 - i * 32, 380, 40);
     });
 }
 

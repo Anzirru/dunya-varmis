@@ -113,6 +113,7 @@ function draw() {
     });
 
     const moveTo = (toWhere) => {
+        if (document.activeElement.id === 'panel-input') return;
         socket.emit('move', {
             id: id,
             to: toWhere

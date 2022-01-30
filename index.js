@@ -12,8 +12,8 @@ const uuid = require('uuid');
 
 const members = {
     a: {
-        username: 'x',
-        coordinates: { x: -64, y: 0 },
+        username: 'Adem',
+        coordinates: { x: -64, y: -64 },
         body: 2,
         hat: 1,
         outfit: 1,
@@ -63,9 +63,9 @@ app.post('/register', (req, res) => {
     members[id] = {
         username: req.body.username,
         coordinates: { x: Math.floor(randomStep(0, 640, 5)), y: Math.floor(randomStep(0, 480, 5)) },
-        body: req.body.body,
-        hat: req.body.hat,
-        outfit: req.body.outfit,
+        body: Number(req.body.body),
+        hat: Number(req.body.hat),
+        outfit: Number(req.body.outfit),
         sleeping: true
     };
 
@@ -82,9 +82,9 @@ app.post('/edit', (req, res) => {
     }
     else {
         members[req.query.id].username = req.body.username;
-        members[req.query.id].body = req.body.body;
-        members[req.query.id].hat = req.body.hat;
-        members[req.query.id].outfit = req.body.outfit;
+        members[req.query.id].body = Number(req.body.body);
+        members[req.query.id].hat = Number(req.body.hat);
+        members[req.query.id].outfit = Number(req.body.outfit);
 
         res.redirect(`/game/?id=${req.query.id}`);
     }
@@ -95,9 +95,9 @@ app.get('/user', (req, res) => {
     if (req.query.id) {
         res.json({
             username: members[req.query.id].username,
-            body: members[req.query.id].body,
-            hat: members[req.query.id].hat,
-            outfit: members[req.query.id].outfit
+            body: Number(members[req.query.id].body),
+            hat: Number(members[req.query.id].hat),
+            outfit: Number(members[req.query.id].outfit)
         });
     }
     else {

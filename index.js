@@ -86,8 +86,6 @@ app.post('/edit', (req, res) => {
         members[req.query.id].hat = req.body.hat;
         members[req.query.id].outfit = req.body.outfit;
 
-        console.log(members);
-
         res.redirect(`/game/?id=${req.query.id}`);
     }
 

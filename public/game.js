@@ -125,33 +125,28 @@ function draw() {
         });
     }
 
+    let to = {
+        x: 0,
+        y: 0
+    };
+
     if (keyIsDown(65)) {
-        moveTo({
-            x: -5,
-            y: 0
-        });
+        to.x += -5;
     }
 
     if (keyIsDown(68)) {
-        moveTo({
-            x: 5,
-            y: 0
-        });
+        to.x += 5;
     }
 
     if (keyIsDown(87)) {
-        moveTo({
-            x: 0,
-            y: -5
-        });
+        to.y += -5;
     }
 
     if (keyIsDown(83)) {
-        moveTo({
-            x: 0,
-            y: 5
-        });
+        to.y += 5;
     }
+    
+    moveTo(to);
 
     messages.slice(0, 10).forEach((e, i) => {
         noStroke();

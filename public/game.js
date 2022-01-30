@@ -81,7 +81,7 @@ function draw() {
             pop();
         }
 
-        if (messages.some(e => (new Date()) - e.time < 2000)) {
+        if (messages.some(e => (new Date()) - e.time < 2000 && e.username === m.username)) {
             push();
 
             let alpha = 150 + sin(frameCount * 0.2) * 50;

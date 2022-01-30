@@ -20,6 +20,8 @@ function preload() {
         skin.hats = d.hats.map(e => loadImage(e));
         skin.outfits = d.outfits.map(e => loadImage(e));
     });
+
+    skin.sleeping = loadImage('/skin/sleeping.png');
 }
 
 function setup() {
@@ -44,9 +46,33 @@ function draw() {
         image(skin.hats[Number(m.hat)], m.coordinates.x - 32, m.coordinates.y - 32);
         image(skin.outfits[Number(m.outfit)], m.coordinates.x - 32, m.coordinates.y - 32);
 
+        if (m.sleeping) {
+            image(skin.sleeping, m.coordinates.x - 32, m.coordinates.y - 32);
+
+            push();
+            colFill = color('goldenrod');
+            colFill.setAlpha(150);
+            fill(colFill);
+
+            colStroke = color('gold');
+            colStroke.setAlpha(180);
+            stroke(colStroke);
+
+            textFont('monospace');
+            textSize(20);
+            textStyle(BOLD);
+            translate(m.coordinates.x + 16 + 16 * sin(frameCount * 0.01), m.coordinates.y - 20 - 4 * cos(frameCount * 0.02));
+            rotate(-PI * 0.05 * sin(-frameCount * 0.005));
+            text('Zzz', 0, 0);
+            pop();
+        }
+
         noStroke();
         fill(255);
+        stroke(0);
         textAlign(CENTER);
+        textSize(16);
+        textStyle(BOLD);
         text(m.username, m.coordinates.x, m.coordinates.y - 40);
     });
 

@@ -11,14 +11,17 @@ const cookieParser = require('cookie-parser');
 const uuid = require('uuid');
 
 const members = {
-    "a": {
+    a: {
         username: 'x',
-        coordinates: {x:-64,y:0},
+        coordinates: { x: -64, y: 0 },
         body: 2,
         hat: 1,
-        outfit: 1
+        outfit: 1,
+        sleeping: true
     }
 };
+
+let clients = {};
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -62,7 +65,8 @@ app.post('/register', (req, res) => {
         coordinates: { x: Math.floor(randomStep(0, 640, 5)), y: Math.floor(randomStep(0, 480, 5)) },
         body: req.body.body,
         hat: req.body.hat,
-        outfit: req.body.outfit
+        outfit: req.body.outfit,
+        sleeping: true
     };
 
     res.redirect(`/game/?id=${id}`);
@@ -84,6 +88,10 @@ io.on('connection', client => {
     });
 
     client.on('create', msg => {
+        clients[client.id] = msg.id;
+
+        members[msg.id].sleeping = false;
+
         io.emit('created', {
             members: Object.values(members),
             character: members[msg.id]
@@ -98,6 +106,13 @@ io.on('connection', client => {
     });
 
     console.log(client.id);
+
+    client.on('disconnect', () => {
+        if (clients[client.id] !== undefined && 
+            members[clients[client.id]] !== undefined) {
+            members[clients[client.id]].sleeping = true;
+        }
+    });
 });
 
 http.listen(port, () => {

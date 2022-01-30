@@ -85,22 +85,30 @@ function draw() {
         text(m.username, m.coordinates.x, m.coordinates.y - 40);
 
         if (m.coordinates.x - 32 > width) {
+            push();
             translate(width - 16, m.coordinates.y);
             rotate(-HALF_PI);
             text(m.username, 0, 0);
+            pop();
         }
         if (m.coordinates.y - 64 > height) {
+            push();
             translate(m.coordinates.x, height - 16);
             text(m.username, 0, 0);
+            pop();
         }
         if (m.coordinates.x + 32 < 0) {
+            push();
             translate(16, m.coordinates.y);
             rotate(HALF_PI);
             text(m.username, 0, 0);
+            pop();
         }
         if (m.coordinates.y + 64 < 0) {
+            push();
             translate(m.coordinates.x, 16);
             text(m.username, 0, 0);
+            pop();
         }
     });
 

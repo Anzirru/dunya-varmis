@@ -51,6 +51,11 @@ function draw() {
     if (!character.coordinates) return;
 
     members.forEach(m => {
+        if (!skin.bodies[Number(m.body)]) return;
+        if (!skin.hats[Number(m.hat)]) return;
+        if (!skin.outfits[Number(m.outfit)]) return;
+
+
         image(skin.bodies[Number(m.body)], m.coordinates.x - 32, m.coordinates.y - 32);
         image(skin.hats[Number(m.hat)], m.coordinates.x - 32, m.coordinates.y - 32);
         image(skin.outfits[Number(m.outfit)], m.coordinates.x - 32, m.coordinates.y - 32);
@@ -149,13 +154,15 @@ function draw() {
     }
 
     messages.slice(0, 10).forEach((e, i) => {
+        noStroke();
+
         col = color(255);
         col.setAlpha(200);
         fill(col);
 
         textSize(12);
         textAlign(LEFT);
-        text(`${e.username}: ${e.message}`, width - 360, height - 30 - i * 32, 380, 40);
+        text(`${e.username}: ${e.message}`, width - 360, height - 30 - i * 32, 340, 40);
     });
 }
 

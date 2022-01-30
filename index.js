@@ -152,6 +152,11 @@ io.on('connection', client => {
         if (clients[client.id] !== undefined && 
             members[clients[client.id]] !== undefined) {
             members[clients[client.id]].sleeping = true;
+            
+            io.emit('moved', {
+                members: Object.values(members),
+                character: members[clients[client.id]]
+            });
         }
     });
 });

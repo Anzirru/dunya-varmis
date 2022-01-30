@@ -72,6 +72,47 @@ app.post('/register', (req, res) => {
     res.redirect(`/game/?id=${id}`);
 });
 
+app.get('/edit', (req, res) => {
+    res.sendFile(path.join(__dirname, 'register.html'));
+});
+
+app.post('/edit', (req, res) => {
+    if (members[req.query.id] === undefined) {
+        res.redirect('/register');
+    }
+    else {
+        members[req.query.id].username = req.body.username;
+        members[req.query.id].body = req.body.body;
+        members[req.query.id].hat = req.body.hat;
+        members[req.query.id].outfit = req.body.outfit;
+
+        console.log(members);
+
+        res.redirect(`/game/?id=${req.query.id}`);
+    }
+
+});
+
+app.get('/user', (req, res) => {
+    if (req.query.id) {
+        res.json({
+            username: members[req.query.id].username,
+            body: members[req.query.id].body,
+            hat: members[req.query.id].hat,
+            outfit: members[req.query.id].outfit
+        });
+    }
+    else {
+        res.json({
+            username: '',
+            body: 0,
+            hat: 0,
+            outfit: 0
+        });
+    }
+
+});
+
 app.use(express.static('public'));
 
 io.on('connection', client => {

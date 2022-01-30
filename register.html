@@ -227,7 +227,21 @@
             leftRightButtons(d.bodies, 'body');
             leftRightButtons(d.hats, 'hat');
             leftRightButtons(d.outfits, 'outfit');
+
+            const id = new URLSearchParams(window.location.search).get('id');
+            if (!!id) {
+                fetch(`/user/?id=${id}`).then(r => r.json()).then(d => {
+                    document.querySelector('input[name="username"]').value = d.username;
+
+                    document.querySelector(`input[id="body${d.body}"`).click();
+                    document.querySelector(`input[id="hat${d.hat}"`).click();
+                    document.querySelector(`input[id="outfit${d.outfit}"`).click();
+                });
+            }
+
+            document.querySelector('title').textContent = 'Düzenle - Dünya Varmış';
         });
+
     </script>    
 </body>
 </html>

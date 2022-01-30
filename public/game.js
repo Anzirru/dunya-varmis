@@ -179,9 +179,14 @@ document.querySelector('#form-panel').addEventListener('submit', e => {
         message: document.querySelector('#panel-input').value
     });
 
-    const inp = document.querySelector('#panel-input').value = '';
+    const inp = document.querySelector('#panel-input');
+
+    inp.value = '';
+    inp.blur();
 });
 
 socket.on('message received', msg => {
     messages.unshift(msg);
 });
+
+document.querySelector('#edit-button').href = `/edit/?id=${id}`;

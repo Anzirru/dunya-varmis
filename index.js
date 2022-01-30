@@ -85,6 +85,8 @@ io.on('connection', client => {
             members: Object.values(members),
             character: members[msg.id]
         });
+
+        members[msg.id].sleeping = false;
     });
 
     client.on('create', msg => {

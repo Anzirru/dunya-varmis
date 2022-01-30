@@ -12,6 +12,8 @@ let grassImg;
 
 let messages = [];
 
+let view;
+
 function preload() {
     grassImg = loadImage('/grass.png');
     
@@ -28,16 +30,23 @@ function setup() {
     let canvas = createCanvas(windowWidth, windowHeight);
 
     socket.emit('create', { id: id });
+
+    view = createVector(0, 0);
 }
 
 function draw() {
     background(0, 160, 0);
 
-    for (let i = 0; i < height / 64; i++) {    
-        for (let j = 0; j < width / 64; j++) {       
+    view = p5.Vector.lerp(view, createVector(-mouseX, -mouseY), 0.005);
+
+    // translate(view.x, view.y);
+
+    for (let i = -height / 64; i < height * 4 / 64; i++) {    
+        for (let j = -width / 64; j < width * 4 / 64; j++) {       
             image(grassImg, j * 64, i * 64);
         }
     }
+
 
     if (!character.coordinates) return;
 
@@ -74,6 +83,25 @@ function draw() {
         textSize(16);
         textStyle(BOLD);
         text(m.username, m.coordinates.x, m.coordinates.y - 40);
+
+        if (m.coordinates.x - 32 > width) {
+            translate(width - 16, m.coordinates.y);
+            rotate(-HALF_PI);
+            text(m.username, 0, 0);
+        }
+        if (m.coordinates.y - 64 > height) {
+            translate(m.coordinates.x, height - 16);
+            text(m.username, 0, 0);
+        }
+        if (m.coordinates.x + 32 < 0) {
+            translate(16, m.coordinates.y);
+            rotate(HALF_PI);
+            text(m.username, 0, 0);
+        }
+        if (m.coordinates.y + 64 < 0) {
+            translate(m.coordinates.x, 16);
+            text(m.username, 0, 0);
+        }
     });
 
     const moveTo = (toWhere) => {

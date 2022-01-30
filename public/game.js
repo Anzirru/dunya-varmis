@@ -11,13 +11,24 @@ let id = new URLSearchParams(window.location.search).get('id');
 let grassImg;
 let plantImg;
 
+let stoneImg;
+let rocksImg;
+
 let messages = [];
 
-let view;
+let stages;
+
+let gateImage;
 
 function preload() {
     grassImg = loadImage('/grass.png');
     plantImg = loadImage('/plant.png');
+
+    stoneImg = loadImage('/stone.png');
+    rocksImg = loadImage('/rocks.png');
+
+    caveImg = loadImage('/cave.png');
+    outsideImg = loadImage('/outside.png');
     
     fetch('/skin.json').then(r => r.json()).then(d => {
         skin.bodies = d.bodies.map(e => loadImage(e));
@@ -35,26 +46,58 @@ function setup() {
 }
 
 function draw() {
-    background(0, 160, 0);
+    if (!character) return;
 
-    for (let i = -height / 64; i < height * 4 / 64; i++) {    
-        for (let j = -width / 64; j < width * 4 / 64; j++) {       
-            image(grassImg, j * 64, i * 64);
+    console.log(character.stage);
 
-            if (Math.floor(i * j * i / 2 + Math.abs(i - j)) % 2 !== 0) {
-                image(plantImg, j * 64, i * 64);
+    switch (character.stage) {
+        case 0:
+            background(0, 160, 0);
+            for (let i = -height / 64; i < height * 4 / 64; i++) {    
+                for (let j = -width / 64; j < width * 4 / 64; j++) {       
+                    image(grassImg, j * 64, i * 64);
+
+                    if (Math.floor(i * j * i / 2 + Math.abs(i - j)) % 2 !== 0) {
+                        image(plantImg, j * 64, i * 64);
+                    }
+                }
             }
-        }
+            image(caveImg, 
+                stages[character.stage].gates[0].x, 
+                stages[character.stage].gates[0].y, 
+                stages[character.stage].gates[0].width, 
+                stages[character.stage].gates[0].height
+            );
+        break;
+        case 1:
+            background(50, 50, 50);
+            for (let i = -height / 64; i < height * 4 / 64; i++) {    
+                for (let j = -width / 64; j < width * 4 / 64; j++) {       
+                    image(stoneImg, j * 64, i * 64);
+
+                    if (Math.floor(i * j * i / 2 + Math.abs(i - j)) % 2 !== 0) {
+                        image(rocksImg, j * 64, i * 64);
+                    }
+                }
+                image(outsideImg, 
+                    stages[character.stage].gates[0].x, 
+                    stages[character.stage].gates[0].y, 
+                    stages[character.stage].gates[0].width, 
+                    stages[character.stage].gates[0].height
+                );
+            }
+        break;
     }
 
 
     if (!character.coordinates) return;
 
     members.forEach(m => {
+        if (m.stage !== character.stage) return;
+
         if (!skin.bodies[Number(m.body)]) return;
         if (!skin.hats[Number(m.hat)]) return;
         if (!skin.outfits[Number(m.outfit)]) return;
-
 
         image(skin.bodies[Number(m.body)], m.coordinates.x - 32, m.coordinates.y - 32);
         image(skin.hats[Number(m.hat)], m.coordinates.x - 32, m.coordinates.y - 32);
@@ -229,6 +272,7 @@ socket.on('moved', msg => {
 socket.on('created', msg => {
     members = msg.members;
     character = msg.character;
+    stages = msg.stages;
 });
 
 function windowResized() {

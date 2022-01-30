@@ -17,9 +17,35 @@ const members = {
         body: 2,
         hat: 1,
         outfit: 1,
-        sleeping: true
+        sleeping: true,
+        stage: 0
     }
 };
+
+const stages = [
+    {
+        gates: [
+            {
+                x: 100,
+                y: 200,
+                width: 96,
+                height: 96,
+                to: 1
+            }
+        ]
+    },
+    {
+        gates: [
+            {
+                x: 300,
+                y: 100,
+                width: 96,
+                height: 96,
+                to: 0
+            }
+        ]
+    }
+];
 
 let clients = {};
 
@@ -66,7 +92,8 @@ app.post('/register', (req, res) => {
         body: Number(req.body.body),
         hat: Number(req.body.hat),
         outfit: Number(req.body.outfit),
-        sleeping: true
+        sleeping: true,
+        stage: 0
     };
 
     res.redirect(`/game/?id=${id}`);
@@ -117,8 +144,22 @@ io.on('connection', client => {
     client.on('move', msg => {
         if (members[msg.id] === undefined) return;
 
+        const stage = stages[members[msg.id].stage];
+
         members[msg.id].coordinates.x += msg.to.x;
         members[msg.id].coordinates.y += msg.to.y;
+
+        if (
+            members[msg.id].coordinates.x > stage.gates[0].x &&
+            members[msg.id].coordinates.x < stage.gates[0].x + stage.gates[0].width &&
+            members[msg.id].coordinates.y > stage.gates[0].y &&
+            members[msg.id].coordinates.y < stage.gates[0].y + stage.gates[0].height
+        ) {
+            members[msg.id].stage = stage.gates[0].to;
+
+            members[msg.id].coordinates.x = stages[stage.gates[0].to].gates[0].x + 64;
+            members[msg.id].coordinates.y = stages[stage.gates[0].to].gates[0].y + 128;
+        }
 
         io.emit('moved', {
             members: Object.values(members),
@@ -131,11 +172,14 @@ io.on('connection', client => {
     client.on('create', msg => {
         clients[client.id] = msg.id;
 
+        console.log(msg.id);
+
         members[msg.id].sleeping = false;
 
         io.emit('created', {
             members: Object.values(members),
-            character: members[msg.id]
+            character: members[msg.id],
+            stages: stages
         });
     });
 
